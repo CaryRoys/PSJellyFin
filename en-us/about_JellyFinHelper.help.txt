@@ -1,0 +1,507 @@
+TOPIC
+    about_JellyFinHelper
+
+SHORT DESCRIPTION
+    A brief explainer on how to get started with JellyFinHelper module
+
+LONG DESCRIPTION
+    PSJellyFin implements the public API Spec published to https://api.jellyfin.org
+
+# Jellyfin PowerShell Module - Quick Start Guide
+
+## Getting Started
+
+### 1. Connect to Your Jellyfin Server
+
+```powershell
+# Option 1: Using API Key (recommended for automation)
+Connect-JellyfinServer -ServerUrl 'http://localhost:8096' -ApiKey 'your-api-key-here'
+
+# Option 2: Using Username/Password
+Connect-JellyfinServer -ServerUrl 'http://localhost:8096' -Username 'admin' -Password 'password'
+
+# Option 3: Using Credentials
+$cred = Get-Credential
+Connect-JellyfinServer -ServerUrl 'http://localhost:8096' -Credential $cred
+
+# Test the connection
+Test-JellyfinConnection
+```
+
+## Common Operations
+
+### System Information
+
+```powershell
+# Get system information
+Get-JellyfinSystemInfo
+
+# Get public system info (no auth required)
+Get-JellyfinPublicSystemInfo
+
+# Ping the server
+Get-JellyfinPing
+
+# Get server endpoints
+Get-JellyfinEndpointInfo
+```
+
+### User Management
+
+```powershell
+# List all users
+Get-JellyfinUsers
+
+# Get specific user by ID
+Get-JellyfinUserById -Userid 'user-id-here'
+
+# Create a new user
+New-JellyfinUserByName -Body @{
+    Name = 'NewUser'
+    Password = 'SecurePassword123'
+}
+
+# Update user password
+Invoke-JellyfinUpdateUserPassword -Userid 'user-id' -Body @{
+    CurrentPassword = 'old'
+    NewPassword = 'new'
+}
+
+# Delete a user
+Remove-JellyfinUser -Userid 'user-id'
+```
+
+### Library Operations
+
+```powershell
+# Get all media folders
+Get-JellyfinMediaFolders
+
+# Get items for a user
+Get-JellyfinItems -Userid 'user-id' -Limit 50
+
+# Get a specific item
+Get-JellyfinItem -Itemid 'item-id' -Userid 'user-id'
+
+# Refresh entire library
+Invoke-JellyfinRefreshLibrary
+
+# Refresh specific item
+Invoke-JellyfinRefreshItem -Itemid 'item-id'
+
+# Get virtual folders (libraries)
+Get-JellyfinVirtualFolders
+
+# Add a new library
+New-JellyfinMediaPath -Body @{
+    Name = 'Movies'
+    LibraryOptions = @{
+        PathInfos = @(
+            @{ Path = 'C:\Media\Movies' }
+        )
+    }
+    CollectionType = 'movies'
+}
+```
+
+### Movies & TV Shows
+
+```powershell
+# Get movie recommendations
+Get-JellyfinMovieRecommendations -Userid 'user-id' -Limit 10
+
+# Get similar items
+Get-JellyfinSimilarItems -Itemid 'item-id' -Userid 'user-id' -Limit 20
+
+# Get episodes
+Get-JellyfinEpisodes -Seriesid 'series-id' -Userid 'user-id'
+
+# Get seasons
+Get-JellyfinSeasons -Seriesid 'series-id' -Userid 'user-id'
+
+# Get next up episodes
+Get-JellyfinNextUp -Userid 'user-id'
+
+# Get upcoming episodes
+Get-JellyfinUpcomingEpisodes -Userid 'user-id'
+```
+
+### Playlists
+
+```powershell
+# Create a playlist
+New-JellyfinPlaylist -Body @{
+    Name = 'My Playlist'
+    MediaType = 'Video'
+    Ids = @('item-id-1', 'item-id-2')
+}
+
+# Get all playlists
+Get-JellyfinPlaylists
+
+# Add items to playlist
+Invoke-JellyfinAddToPlaylist -Playlistid 'playlist-id' -Ids 'item-id-1,item-id-2'
+
+# Remove item from playlist
+Remove-JellyfinItemFromPlaylist -Playlistid 'playlist-id' -Entryids 'entry-id'
+
+# Update playlist
+Set-JellyfinPlaylist -Playlistid 'playlist-id' -Body @{
+    Name = 'Updated Name'
+}
+```
+
+### Live TV
+
+```powershell
+# Get live TV channels
+Get-JellyfinLiveTvChannels -Userid 'user-id'
+
+# Get live TV programs (EPG)
+Get-JellyfinLiveTvPrograms
+
+# Get recordings
+Get-JellyfinRecordings -Userid 'user-id'
+
+# Get recording series
+Get-JellyfinRecordingsSeries -Userid 'user-id'
+
+# Create recording timer
+New-JellyfinTimer -Body @{
+    ChannelId = 'channel-id'
+    ProgramId = 'program-id'
+}
+
+# Get timers
+Get-JellyfinTimers
+
+# Delete timer
+Remove-JellyfinTimer -Timerid 'timer-id'
+```
+
+### Playback & Sessions
+
+```powershell
+# Get active sessions
+Get-JellyfinSessions
+
+# Report playback start
+Invoke-JellyfinReportPlaybackStart -Body @{
+    ItemId = 'item-id'
+    SessionId = 'session-id'
+}
+
+# Report playback progress
+Invoke-JellyfinReportPlaybackProgress -Body @{
+    ItemId = 'item-id'
+    PositionTicks = 1234567890
+    IsPaused = $false
+}
+
+# Report playback stopped
+Invoke-JellyfinReportPlaybackStopped -Body @{
+    ItemId = 'item-id'
+    PositionTicks = 1234567890
+}
+
+# Mark item as played
+Invoke-JellyfinMarkPlayedItem -Userid 'user-id' -Itemid 'item-id'
+
+# Mark item as unplayed
+Remove-JellyfinMarkUnplayedItem -Userid 'user-id' -Itemid 'item-id'
+```
+
+### Search & Discovery
+
+```powershell
+# Search for items
+Get-JellyfinSearchHints -SearchTerm 'query' -Userid 'user-id' -Limit 20
+
+# Get suggestions
+Get-JellyfinSuggestions -Userid 'user-id' -Limit 10
+
+# Get artists
+Get-JellyfinArtists -Userid 'user-id'
+
+# Get album artists
+Get-JellyfinAlbumArtists -Userid 'user-id'
+
+# Get genres
+Get-JellyfinGenres -Userid 'user-id'
+
+# Get studios
+Get-JellyfinStudios -Userid 'user-id'
+
+# Get years
+Get-JellyfinYears -Userid 'user-id'
+```
+
+### Images
+
+```powershell
+# Get item image
+Get-JellyfinItemImage -Itemid 'item-id' -Imagetype 'Primary'
+
+# Get user image
+Get-JellyfinUserImage -Userid 'user-id'
+
+# Get artist image
+Get-JellyfinArtistImage -Name 'Artist Name' -Imagetype 'Primary'
+
+# Upload user image
+Invoke-JellyfinPostUserImage -Userid 'user-id' -Imagetype 'Primary' -Body $imageBytes
+
+# Delete item image
+Remove-JellyfinItemImageByIndex -Itemid 'item-id' -Imagetype 'Primary' -Imageindex 0
+```
+
+### Plugins
+
+```powershell
+# Get installed plugins
+Get-JellyfinPlugins
+
+# Get available plugins
+Get-JellyfinPackages
+
+# Install plugin
+Invoke-JellyfinInstallPackage -Name 'plugin-name' -Version '1.0.0'
+
+# Uninstall plugin
+Remove-JellyfinPlugin -Pluginid 'plugin-id' -Version '1.0.0'
+
+# Get plugin configuration
+Get-JellyfinPluginConfiguration -Pluginid 'plugin-id'
+
+# Update plugin configuration
+Invoke-JellyfinUpdatePluginConfiguration -Pluginid 'plugin-id' -Body $configJson
+```
+
+### Scheduled Tasks
+
+```powershell
+# Get all scheduled tasks
+Get-JellyfinTasks
+
+# Get specific task
+Get-JellyfinTask -Taskid 'task-id'
+
+# Start task
+Invoke-JellyfinStartTask -Taskid 'task-id'
+
+# Stop task
+Invoke-JellyfinStopTask -Taskid 'task-id'
+
+# Update task triggers
+Invoke-JellyfinUpdateTask -Taskid 'task-id' -Body $triggerConfig
+```
+
+### Activity Log
+
+```powershell
+# Get activity log entries
+Get-JellyfinLogEntries -StartIndex 0 -Limit 100
+
+# Filter by date
+Get-JellyfinLogEntries -MinDate (Get-Date).AddDays(-7)
+
+# Filter by user
+Get-JellyfinLogEntries -HasUserId $true
+```
+
+### API Key Management
+
+```powershell
+# Get all API keys
+Get-JellyfinKeys
+
+# Create new API key
+New-JellyfinKey -App 'MyApplication'
+
+# Revoke API key
+Remove-JellyfinRevokeKey -Key 'api-key-to-revoke'
+```
+
+### Collections
+
+```powershell
+# Create a collection
+New-JellyfinCollection -Name 'My Collection' -Ids 'item-id-1,item-id-2'
+
+# Add to collection
+Invoke-JellyfinAddToCollection -Collectionid 'collection-id' -Ids 'item-id-3'
+
+# Remove from collection
+Remove-JellyfinItemsFromCollection -Collectionid 'collection-id' -Ids 'item-id-1'
+```
+
+### Subtitles
+
+```powershell
+# Get subtitles
+Get-JellyfinSubtitle -Itemid 'item-id' -Routeindex 0
+
+# Search for subtitles
+Get-JellyfinRemoteSubtitles -Itemid 'item-id'
+
+# Download subtitle
+Invoke-JellyfinDownloadRemoteSubtitles -Itemid 'item-id' -Subtitleid 'subtitle-id'
+
+# Upload subtitle
+Invoke-JellyfinUploadSubtitle -Itemid 'item-id' -Body @{
+    Language = 'eng'
+    Format = 'srt'
+    Data = $subtitleContent
+}
+
+# Delete subtitle
+Remove-JellyfinSubtitle -Itemid 'item-id' -Index 0
+```
+
+### SyncPlay (Watch Together)
+
+```powershell
+# Create SyncPlay group
+New-JellyfinGroupCreate -Body @{ GroupName = 'Movie Night' }
+
+# Join group
+Invoke-JellyfinGroupJoin -Groupid 'group-id'
+
+# Leave group
+Invoke-JellyfinGroupLeave
+
+# Get groups
+Get-JellyfinGroups
+
+# Send command to group
+Invoke-JellyfinGroupPlay
+Invoke-JellyfinGroupPause
+Invoke-JellyfinGroupSeek -PositionTicks 1234567890
+```
+
+### Device Management
+
+```powershell
+# Get devices
+Get-JellyfinDevices
+
+# Get device info
+Get-JellyfinDeviceInfo -Id 'device-id'
+
+# Delete device
+Remove-JellyfinDevice -Id 'device-id'
+
+# Update device options
+Invoke-JellyfinUpdateDeviceOptions -Id 'device-id' -Body @{
+    CustomName = 'My Device'
+}
+```
+
+### Server Configuration
+
+```powershell
+# Get server configuration
+Get-JellyfinConfiguration
+
+# Update configuration
+Invoke-JellyfinUpdateConfiguration -Body $configJson
+
+# Get named configuration
+Get-JellyfinNamedConfiguration -Key 'branding'
+
+# Update named configuration
+Invoke-JellyfinUpdateNamedConfiguration -Key 'branding' -Body $brandingConfig
+```
+
+### System Operations
+
+```powershell
+# Get system logs
+Get-JellyfinSystemLogs
+
+# Get specific log file
+Get-JellyfinLogFile -Name 'log_20250118.txt'
+
+# Get wake-on-LAN info
+Get-JellyfinWakeOnLanInfo
+
+# Restart server (with confirmation)
+Restart-JellyfinSystem
+
+# Shutdown server (with confirmation)
+Stop-JellyfinSystem
+```
+
+## Advanced Examples
+
+### Bulk Operations
+
+```powershell
+# Mark multiple items as favorite
+$items = Get-JellyfinItems -UserId $userId -Limit 100
+$items.Items | Where-Object { $_.Type -eq 'Movie' } | ForEach-Object {
+    Invoke-JellyfinMarkFavoriteItem -UserId $userId -ItemId $_.Id
+}
+
+# Export all users
+$users = Get-JellyfinUsers
+$users | Export-Csv -Path 'jellyfin-users.csv' -NoTypeInformation
+```
+
+### Automation
+
+```powershell
+# Auto-backup script
+$backups = Get-JellyfinBackups
+if ($backups.Count -lt 3) {
+    New-JellyfinBackup
+}
+
+# Monitor active sessions
+$sessions = Get-JellyfinSessions | Where-Object { $_.NowPlayingItem }
+$sessions | ForEach-Object {
+    Write-Host "$($_.UserName) is watching $($_.NowPlayingItem.Name)"
+}
+```
+
+## Disconnect
+
+```powershell
+# Disconnect from server
+Disconnect-JellyfinServer
+```
+
+## Tips
+
+1. **Use -Verbose** for debugging: `Get-JellyfinSystemInfo -Verbose`
+2. **Pipeline support**: Many functions support pipeline input
+3. **Tab completion**: Use tab to complete function and parameter names
+4. **Get help**: `Get-Help Get-JellyfinItems -Full`
+5. **Discover functions**: `Get-Command -Module 'jellyfin ps module' -Name '*Jellyfin*'`
+
+## Function Categories
+
+Run this to see all available functions by category:
+
+```powershell
+Get-Command -Module 'jellyfin ps module' | Group-Object { ($_.Name -split '-')[1] -replace 'Jellyfin', '' } | Sort-Object Count -Descending
+```
+
+## Getting Help
+
+```powershell
+# List all Jellyfin functions
+Get-Command -Module 'jellyfin ps module' -Name '*Jellyfin*'
+
+# Get help for a specific function
+Get-Help Get-JellyfinItems -Full
+
+# Search for functions
+Get-Command -Module 'jellyfin ps module' -Name '*Library*'
+```
+
+---
+
+**Total Functions**: 393 (388 API endpoints + 6 helpers)
+**API Version**: Jellyfin 10.11.0
+**Module Version**: 2.0.0

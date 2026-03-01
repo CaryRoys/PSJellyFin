@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.jellyfin.org)",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(powershell.exe -Command \":*)",
+      "Bash(powershell.exe -File:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\projects\\\\PSJellyFin\\\\extract-enums.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/fix-module.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/fix-module2.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/fix-module3.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/get-arrayparams.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/fix-delimited.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/inspect-spec.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/update-docs.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"c:/projects/PSJellyFin/debug-docs.ps1\")"
+    ]
+  }
+}
