@@ -7,6 +7,7 @@ A Powershell JellyFin API module
 Written largely by Claude Code, based on the API spec at https://api.jellyfin.org, and noodled on by the author on Medium:
 
 https://medium.com/@caryroys/a-working-example-of-jellyfin-automation-196d72bf4542
+
 https://medium.com/@caryroys/a-working-example-of-jellyfin-automation-ai-redux-2458b360837a
 
 # Getting Started
