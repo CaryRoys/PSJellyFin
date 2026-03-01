@@ -270,6 +270,12 @@ function Connect-JellyfinServer {
     $headers["Origin"]= $ServerUrl
     $headers["accept"]="application/json"
     $headers["Accept-Encoding"] = "deflate"
+	if ($PSVersionTable.PSVersion.Major -lt 6) {
+    	$UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
+	}
+	else {
+	    $UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::PowerShell
+	}
     $headers["User-Agent"] = $UserAgent
     $headers["Accept-Language"]="en-US,en;q=0.9"
     
