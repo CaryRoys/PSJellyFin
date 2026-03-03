@@ -256,7 +256,12 @@ function Connect-JellyfinServer {
     # Normalize server URL
     $script:JellyfinConfig.ServerUrl = $ServerUrl.TrimEnd('/')
 
-    $UserAgent = "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.19045; en-US) PowerShell/7.5.4"
+	if ($PSVersionTable.PSVersion.Major -lt 6) {
+    	$UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
+	}
+	else {
+	    $UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::PowerShell
+	}
     # Generate a Jellyfin-like numeric suffix (13–17 digit monotonic ID)
     # Using current time in microseconds for Jellyfin-style uniqueness - a random ID is as good as anything
     $MicroSeconds = [int64]([DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() * 1000 + (Get-Random -Minimum 0 -Maximum 1000))
@@ -270,12 +275,6 @@ function Connect-JellyfinServer {
     $headers["Origin"]= $ServerUrl
     $headers["accept"]="application/json"
     $headers["Accept-Encoding"] = "deflate"
-	if ($PSVersionTable.PSVersion.Major -lt 6) {
-    	$UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
-	}
-	else {
-	    $UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::PowerShell
-	}
     $headers["User-Agent"] = $UserAgent
     $headers["Accept-Language"]="en-US,en;q=0.9"
     

@@ -84,16 +84,16 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @('JellyFin','PSJellyFin','API','REST')
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/CaryRoys/PSJellyFin/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/CaryRoys/PSJellyFin'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://raw.githubusercontent.com/CaryRoys/PSJellyFin/refs/heads/main/PSJellyFin.ico'
 
         # ReleaseNotes of this module
         # ReleaseNotes = ''
